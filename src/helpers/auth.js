@@ -1,11 +1,14 @@
 // import jwt_decode from "jwt-decode";
+import { supabase } from "../helpers/supabase.config";
 
 class Auth {
   login(email, password) {}
 
   signUp(email, password) {}
 
-  logout() {}
+  async logout() {
+    return await supabase.auth.signOut()
+  }
 
   isAuthenticated() {
     const token = localStorage.getItem("supabase.auth.token");

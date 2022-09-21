@@ -6,18 +6,28 @@ import { supabase } from "../helpers/supabase.config";
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState();
+  const [success, setSuccess] = useState();
+  const [loader, setLoader] = useState(false);
   const validator = useRef(getValidator());
   const [, forceUpdate] = useState(0);
   const onHandleSubmit = async (e) => {
     e.preventDefault();
     if (validator.current.allValid()) {
-      console.log("no err");
+      setLoader(true);
       const { user, error } = await supabase.auth.signUp({
         email: email,
         password: password,
       });
-      console.log("user - ", user);
-      console.log("error - ", error);
+      setLoader(false);
+      if (user) {
+        setSuccess("Please verify your email before login.");
+      }
+      if (error) {
+        setError(error.message);
+      }
+      // console.log("user - ", user);
+      // console.log("error - ", error);
     } else {
       console.log("err");
       validator.current.showMessages();
@@ -56,6 +66,16 @@ function SignUp() {
               {validator.current.message("password", password, "required")}
             </span>
           </div>
+          {success && (
+            <div className="p-2 border-solid rounded-md border border-green-500 my-2">
+              <span className="text-green-500">{success}</span>
+            </div>
+          )}
+          {error && (
+            <div className="p-2 border-solid rounded-md border border-red-500 my-2">
+              <span className="text-red-500">{error}</span>
+            </div>
+          )}
           <div className="mt-2">
             <button
               className="bg-blue-500 w-full rounded-sm text-white py-2"

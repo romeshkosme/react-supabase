@@ -1,27 +1,30 @@
 import React, { useState, useRef } from "react";
 import { getValidator } from "../helpers/utils";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { supabase } from "../helpers/supabase.config";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate ();
+  const [error, setError] = useState();
+  const [loader, setLoader] = useState(false);
   const validator = useRef(getValidator());
   const [, forceUpdate] = useState(0);
   const onHandleSubmit = async (e) => {
     e.preventDefault();
     if (validator.current.allValid()) {
+      setLoader(true);
       const { user, error } = await supabase.auth.signIn({
         email: email,
         password: password,
       });
+      setLoader(false);
       if (user) {
-        console.log("user - ", user);
-        navigate('/dashboard');
-      } 
+        // console.log("user - ", user);
+        window.location.href = "/dashboard";
+      }
       if (error) {
-        console.log("error - ", error);
+        setError(error.message);
       }
     } else {
       validator.current.showMessages();
@@ -60,6 +63,11 @@ function Login() {
               {validator.current.message("password", password, "required")}
             </span>
           </div>
+          {error && (
+            <div className="p-2 border-solid rounded-md border border-red-500 my-2">
+              <span className="text-red-500">{error}</span>
+            </div>
+          )}
           <div className="mt-2">
             <button
               className="bg-blue-500 w-full rounded-sm text-white py-2"

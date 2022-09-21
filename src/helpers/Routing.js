@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
 import { getAuth } from "./auth";
 import { PrivateRoute, PublicRoute } from "../helpers/utils";
+import Logout from "../components/Logout";
 export const Routing = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   useEffect(() => {
@@ -37,6 +38,14 @@ export const Routing = () => {
             element={
               <PrivateRoute auth={isAuthenticated}>
                 <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/logout"
+            element={
+              <PrivateRoute auth={isAuthenticated}>
+                <Logout />
               </PrivateRoute>
             }
           />
