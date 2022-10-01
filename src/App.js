@@ -1,5 +1,6 @@
 import { Routing } from "./helpers/Routing";
 import ErrorBoundary from "./components/ErrorBoundary";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
       <div className="App">
         <Routing />
       </div>
+      <Footer />
     </ErrorBoundary>
   );
 }
